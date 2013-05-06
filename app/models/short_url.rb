@@ -17,6 +17,5 @@ class ShortUrl < ActiveRecord::Base
     str = "#{SecureRandom.urlsafe_base64(6)}"
     self.create(url: str, user_id: user_id, long_url_id: long_url_id, comments: nil)
   end
-
-
+  
 end
