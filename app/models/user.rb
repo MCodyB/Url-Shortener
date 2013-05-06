@@ -16,14 +16,38 @@ class User < ActiveRecord::Base
   end
 
   def submit_url(long_url)
-    long_url = LongUrl.create(long_url)
+    if LongUrl.where(url: longUrl).empty?
+      long_url = LongUrl.create!(:url => long_url)
+    else
+      long_url = LongUrl.where(url: longUrl).first
+    end
     a = ShortUrl.generate_short_url(long_url.id, self.id)
     a.url
   end
 
-  def launch_website_from_s_url(short_url)
-    link = ShortUrl.where(:url => short_url).long_url.url
-    Launchy.open(link)
+  def attach_comment(short_url, comments)
+    short = ShortUrl.where(:url => short_url).first
+    short.comments = comments
+    short.save!
   end
+
+  def add_tag(short_url, tag)
+    short = ShortUrl.where(:url => short_url).first
+    tag = TagTopic.where(:tag => tag).first
+    Tagging.create!(short_url_id: short.id, tag_topic_id: tag.id)
+  end
+
+  def launch_website(short_url)
+    short = ShortUrl.where(:url => short_url).first
+    link = short.long_url.url
+    puts short.comments if short.comments
+    Launchy.open(link)
+    create_visit!(short.id)
+  end
+
+  def create_visit!(id)
+    Visit.create!(:short_url_id => id)
+  end
+
 
 end
