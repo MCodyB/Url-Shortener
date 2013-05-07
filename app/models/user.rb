@@ -57,7 +57,8 @@ class User < ActiveRecord::Base
     TagTopic.pluck(:tag)
   end
 
-  def popular_links(tag)
-    LongUrl.select('url').group(tag).maximum(tag)
+  # def popular_links(tag)
+ #    LongUrl.select('url').group(tag).maximum(tag)
+ #  end
 
 end
