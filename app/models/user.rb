@@ -16,10 +16,10 @@ class User < ActiveRecord::Base
   end
 
   def submit_url(long_url)
-    if LongUrl.where(url: longUrl).empty?
+    if LongUrl.where(url: long_url).empty?
       long_url = LongUrl.create!(:url => long_url)
     else
-      long_url = LongUrl.where(url: longUrl).first
+      long_url = LongUrl.where(url: long_url).first
     end
     a = ShortUrl.generate_short_url(long_url.id, self.id)
     a.url
@@ -49,5 +49,15 @@ class User < ActiveRecord::Base
     Visit.create!(:short_url_id => id)
   end
 
+  def submitted_urls
+    self.long_urls
+  end
+
+  def tags
+    TagTopic.pluck(:tag)
+  end
+
+  def popular_links(tag)
+    LongUrl.select('url').group(tag).maximum(tag)
 
 end

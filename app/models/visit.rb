@@ -6,4 +6,12 @@ class Visit < ActiveRecord::Base
   belongs_to :short_url
   has_one :long_url, :through => :short_url
   has_one :user, :through => :short_url
+
+  def self.long_url_count(url)
+    LongUrl.where(url: url).first.visits.count
+  end
+
+  def self.distinct_url_visitors(url)
+    LongUrl.where(url: url).first.users.count
+  end
 end
